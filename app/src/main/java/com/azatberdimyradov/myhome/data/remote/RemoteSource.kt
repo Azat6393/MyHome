@@ -16,7 +16,7 @@ class RemoteSource @Inject constructor(
 
     suspend fun getCameras(): Result<CameraResponse> {
         return try {
-            client.get { url(HttpRoutes.CAMERAS_URL) }
+            Result.Success<CameraResponse>(client.get { url(HttpRoutes.CAMERAS_URL) })
         } catch (e: RedirectResponseException) {
             Result.Error<CameraResponse>(e.response.status.description)
         } catch (e: ClientRequestException) {
@@ -30,7 +30,7 @@ class RemoteSource @Inject constructor(
 
     suspend fun getDoors(): Result<DoorResponse> {
         return try {
-            client.get { url(HttpRoutes.DOORS_URL) }
+            Result.Success<DoorResponse>(client.get { url(HttpRoutes.DOORS_URL) })
         } catch (e: RedirectResponseException) {
             Result.Error<DoorResponse>(e.response.status.description)
         } catch (e: ClientRequestException) {

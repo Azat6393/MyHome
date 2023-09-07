@@ -7,5 +7,6 @@ import kotlinx.serialization.Serializable
 data class CameraResponse(
     @SerialName("data")
     val _data: CameraDataDto? = null,
+    @SerialName("success")
     val success: Boolean? = null
 )

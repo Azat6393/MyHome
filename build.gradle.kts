@@ -2,6 +2,7 @@
 buildscript {
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-serialization:1.5.21")
+        classpath("io.realm:realm-gradle-plugin:10.15.1")
     }
 }
 plugins {
