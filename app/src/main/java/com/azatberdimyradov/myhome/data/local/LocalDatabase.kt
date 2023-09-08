@@ -6,6 +6,8 @@ import com.azatberdimyradov.myhome.data.local.model.DoorModel
 import com.azatberdimyradov.myhome.data.remote.dto.CameraDto
 import com.azatberdimyradov.myhome.data.remote.dto.DoorDataDto
 import io.realm.Realm
+import io.realm.kotlin.toFlow
+import kotlinx.coroutines.flow.Flow
 import java.util.Random
 import javax.inject.Inject
 
@@ -15,7 +17,7 @@ class LocalDatabase @Inject constructor(
 
     fun addCamera(cameraDto: CameraDto) {
         realm.executeTransaction { r: Realm ->
-            val camera = r.createObject(CameraModel::class.java,cameraDto.id ?: Random().nextInt())
+            val camera = r.createObject(CameraModel::class.java, cameraDto.id ?: Random().nextInt())
             camera.name = cameraDto.name ?: ""
             camera.rec = cameraDto.rec ?: false
             camera.room = cameraDto.room ?: ""
@@ -49,21 +51,15 @@ class LocalDatabase @Inject constructor(
         }
     }
 
-    fun getAllCameras(): MutableLiveData<List<CameraModel>> {
-        val list = MutableLiveData<List<CameraModel>>()
-        val cameras = realm.where(CameraModel::class.java).findAll()
-        list.value = cameras?.subList(0, cameras.size)
-        return list
+    fun getAllCameras(): Flow<List<CameraModel>> {
+        return realm.where(CameraModel::class.java).findAll().toFlow()
     }
 
-    fun getAllDoors(): MutableLiveData<List<DoorModel>> {
-        val list = MutableLiveData<List<DoorModel>>()
-        val doors = realm.where(DoorModel::class.java).findAll()
-        list.value = doors?.subList(0, doors.size)
-        return list
+    fun getAllDoors(): Flow<List<DoorModel>> {
+        return realm.where(DoorModel::class.java).findAll().toFlow()
     }
 
-    fun databaseIsEmpty(): Boolean{
+    fun databaseIsEmpty(): Boolean {
         return realm.isEmpty
     }
 }

@@ -12,10 +12,13 @@ import com.azatberdimyradov.myhome.domain.model.Door
 import com.azatberdimyradov.myhome.domain.repository.MyHomeRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MyHomeRepositoryImpl @Inject constructor(
@@ -44,8 +47,10 @@ class MyHomeRepositoryImpl @Inject constructor(
 
             is Result.Success -> {
                 if (result.data?.success == true) {
-                    localDatabase.deleteAllCameras()
-                    result.data._data?.cameras?.forEach(localDatabase::addCamera)
+                    withContext(Dispatchers.Main) {
+                        localDatabase.deleteAllCameras()
+                        result.data._data?.cameras?.forEach(localDatabase::addCamera)
+                    }
                 } else {
                     _errorMessage.emit(result.message ?: "Something went wrong")
                 }
@@ -61,8 +66,10 @@ class MyHomeRepositoryImpl @Inject constructor(
 
             is Result.Success -> {
                 if (result.data?.success == true) {
-                    localDatabase.deleteAllDoors()
-                    result.data._data?.forEach(localDatabase::addDoor)
+                    withContext(Dispatchers.Main) {
+                        localDatabase.deleteAllDoors()
+                        result.data._data?.forEach(localDatabase::addDoor)
+                    }
                 } else {
                     _errorMessage.emit(result.message ?: "Something went wrong")
                 }
@@ -70,13 +77,13 @@ class MyHomeRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getCameras(): LiveData<List<Camera>> {
+    override fun getCameras(): Flow<List<Camera>> {
         return localDatabase.getAllCameras().map { list ->
             list.map { it.toCamera() }
         }
     }
 
-    override fun getDoors(): LiveData<List<Door>> {
+    override fun getDoors(): Flow<List<Door>> {
         return localDatabase.getAllDoors().map { list ->
             list.map { it.toDoor() }
         }

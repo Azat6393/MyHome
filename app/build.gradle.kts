@@ -74,6 +74,8 @@ dependencies {
     //Hilt
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1")
@@ -90,6 +92,10 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.3")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
 
 }
 kapt {

@@ -1,4 +1,4 @@
-package com.azatberdimyradov.myhome.presentation.camera
+package com.azatberdimyradov.myhome.presentation.door
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.azatberdimyradov.myhome.domain.repository.MyHomeRepository
-import com.azatberdimyradov.myhome.domain.use_case.GetCamerasUseCase
-import com.azatberdimyradov.myhome.domain.use_case.UpdateCamerasUseCase
+import com.azatberdimyradov.myhome.domain.use_case.GetDoorsUseCase
+import com.azatberdimyradov.myhome.domain.use_case.UpdateDoorsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
@@ -16,27 +16,27 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CameraViewModel @Inject constructor(
+class DoorViewModel @Inject constructor(
     val repo: MyHomeRepository,
-    val getCamerasUseCase: GetCamerasUseCase,
-    val updateCamerasUseCase: UpdateCamerasUseCase
+    val getDoorsUseCase: GetDoorsUseCase,
+    val updateDoorsUseCase: UpdateDoorsUseCase
 ) : ViewModel() {
 
-    var state by mutableStateOf(CameraScreenState())
+    var state by mutableStateOf(DoorScreenState())
         private set
 
     init {
-        getCameras()
+        getDoors()
         fetchError()
     }
 
-    fun updateCameras() = viewModelScope.launch {
-        updateCamerasUseCase()
+    fun updateDoors() = viewModelScope.launch {
+        updateDoorsUseCase()
     }
 
-    private fun getCameras() {
-        getCamerasUseCase().onEach {
-            state = state.copy(cameras = it)
+    private fun getDoors() {
+        getDoorsUseCase().onEach {
+            state = state.copy(doors = it)
         }.launchIn(viewModelScope)
     }
 

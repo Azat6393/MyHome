@@ -15,8 +15,8 @@ interface MyHomeRepository {
 
     suspend fun updateDoors()
 
-    fun getCameras(): LiveData<List<Camera>>
+    fun getCameras(): Flow<List<Camera>>
 
-    fun getDoors(): LiveData<List<Door>>
+    fun getDoors(): Flow<List<Door>>
 
 }

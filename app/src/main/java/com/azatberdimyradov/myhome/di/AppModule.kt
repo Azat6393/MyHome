@@ -5,6 +5,10 @@ import com.azatberdimyradov.myhome.data.local.LocalDatabase
 import com.azatberdimyradov.myhome.data.remote.RemoteSource
 import com.azatberdimyradov.myhome.data.repository.MyHomeRepositoryImpl
 import com.azatberdimyradov.myhome.domain.repository.MyHomeRepository
+import com.azatberdimyradov.myhome.domain.use_case.GetCamerasUseCase
+import com.azatberdimyradov.myhome.domain.use_case.GetDoorsUseCase
+import com.azatberdimyradov.myhome.domain.use_case.UpdateCamerasUseCase
+import com.azatberdimyradov.myhome.domain.use_case.UpdateDoorsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -75,4 +79,20 @@ object AppModule {
     fun provideRemoteSource(client: HttpClient): RemoteSource {
         return RemoteSource(client)
     }
+
+    @Provides
+    @Singleton
+    fun provideGetCamerasUseCase(repo: MyHomeRepository) = GetCamerasUseCase(repo)
+
+    @Provides
+    @Singleton
+    fun provideGetDoorsUseCase(repo: MyHomeRepository) = GetDoorsUseCase(repo)
+
+    @Provides
+    @Singleton
+    fun provideUpdateCamerasUseCase(repo: MyHomeRepository) = UpdateCamerasUseCase(repo)
+
+    @Provides
+    @Singleton
+    fun provideUpdateDoorsUseCase(repo: MyHomeRepository) = UpdateDoorsUseCase(repo)
 }
