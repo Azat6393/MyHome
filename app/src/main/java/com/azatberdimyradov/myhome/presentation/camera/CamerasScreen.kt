@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,60 +52,69 @@ import coil.compose.AsyncImage
 import com.azatberdimyradov.myhome.R
 import com.azatberdimyradov.myhome.domain.model.Camera
 import com.azatberdimyradov.myhome.presentation.dp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlin.math.roundToInt
 
 @Composable
 fun CamerasScreen(
     modifier: Modifier = Modifier,
-    state: CameraScreenState
+    state: CameraScreenState,
+    onRefresh: () -> Unit
 ) {
-    LazyColumn(modifier = modifier) {
-        item {
-            Spacer(modifier = Modifier.height(15.dp))
-            Text(
-                text = "Гостиная",
-                color = Color.Black,
-                fontSize = 25.sp,
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 15.dp)
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-        }
-        items(
-            state.cameras,
-            key = { item -> item.id }
-        ) { item ->
-            Box {
-                Image(
-                    painter = painterResource(
-                        id = if (item.favorites) R.drawable.star_checked
-                        else R.drawable.star_uncheacked
-                    ), contentDescription = "Star",
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = state.isLoading)
+
+    SwipeRefresh(state = swipeRefreshState, onRefresh = onRefresh) {
+
+        LazyColumn(modifier = modifier) {
+            item {
+                Spacer(modifier = Modifier.height(15.dp))
+                Text(
+                    text = "Гостиная",
+                    color = Color.Black,
+                    fontSize = 25.sp,
+                    textAlign = TextAlign.Start,
                     modifier = Modifier
-                        .padding(end = 25.dp)
-                        .drawBehind {
-                            drawCircle(
-                                color = Color.Gray,
-                                radius = 25.dp.toPx(),
-                                style = Stroke()
-                            )
-                        }
-                        .size(30.dp)
-                        .align(Alignment.CenterEnd)
+                        .fillMaxWidth()
+                        .padding(start = 15.dp)
                 )
-                CameraItem(
-                    camera = item,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    cardOffset = 68f.dp(),
-                    onExpand = {},
-                    onCollapse = {}
-                )
+                Spacer(modifier = Modifier.height(15.dp))
+            }
+            items(
+                state.cameras,
+                key = { item -> item.id }
+            ) { item ->
+                Box {
+                    Image(
+                        painter = painterResource(
+                            id = if (item.favorites) R.drawable.star_checked
+                            else R.drawable.star_uncheacked
+                        ), contentDescription = "Star",
+                        modifier = Modifier
+                            .padding(end = 25.dp)
+                            .drawBehind {
+                                drawCircle(
+                                    color = Color.Gray,
+                                    radius = 25.dp.toPx(),
+                                    style = Stroke()
+                                )
+                            }
+                            .size(30.dp)
+                            .align(Alignment.CenterEnd)
+                    )
+                    CameraItem(
+                        camera = item,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        cardOffset = 68f.dp(),
+                        onExpand = {},
+                        onCollapse = {}
+                    )
+                }
             }
         }
     }
+
 }
 
 
@@ -186,7 +196,7 @@ fun CameraItem(
                     text = camera.name,
                     textAlign = TextAlign.Start,
                     fontSize = 18.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
             }
         }

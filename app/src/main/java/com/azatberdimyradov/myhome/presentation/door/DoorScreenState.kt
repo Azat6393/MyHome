@@ -4,5 +4,6 @@ import com.azatberdimyradov.myhome.domain.model.Door
 
 data class DoorScreenState(
     val doors: List<Door> = emptyList(),
-    val errorMessage: String = ""
+    val errorMessage: String = "",
+    val isLoading: Boolean = false
 )

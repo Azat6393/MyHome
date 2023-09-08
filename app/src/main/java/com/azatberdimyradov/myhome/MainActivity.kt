@@ -2,6 +2,7 @@ package com.azatberdimyradov.myhome
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -16,6 +17,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,11 +57,31 @@ class MainActivity : ComponentActivity() {
                     val pagerSelect = rememberPagerState(initialPage = 0)
                     val scope = rememberCoroutineScope()
 
+                    LaunchedEffect(
+                        key1 = doorViewModel.state.errorMessage,
+                        key2 = cameraViewModel.state.errorMessage
+                    ) {
+                        if (doorViewModel.state.errorMessage.isNotBlank()) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                doorViewModel.state.errorMessage,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        if (cameraViewModel.state.errorMessage.isNotBlank()) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                cameraViewModel.state.errorMessage,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+
                     Column(modifier = Modifier.fillMaxSize()) {
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
                             text = "Мой дом",
-                            color = Color.Black,
+                            color = MaterialTheme.colorScheme.onBackground,
                             fontSize = 25.sp,
                             textAlign = TextAlign.Center,
                             fontFamily = FontFamily.Cursive,
@@ -81,14 +103,16 @@ class MainActivity : ComponentActivity() {
                                 0 -> {
                                     CamerasScreen(
                                         state = cameraViewModel.state,
-                                        modifier = Modifier.fillMaxSize()
+                                        modifier = Modifier.fillMaxSize(),
+                                        onRefresh = cameraViewModel::updateCameras
                                     )
                                 }
 
                                 1 -> {
                                     DoorsScreen(
                                         state = doorViewModel.state,
-                                        modifier = Modifier.fillMaxSize()
+                                        modifier = Modifier.fillMaxSize(),
+                                        onRefresh = doorViewModel::updateDoors
                                     )
                                 }
                             }

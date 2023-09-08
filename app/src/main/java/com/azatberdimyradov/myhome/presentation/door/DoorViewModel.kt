@@ -32,19 +32,20 @@ class DoorViewModel @Inject constructor(
 
     fun updateDoors() = viewModelScope.launch {
         updateDoorsUseCase()
+        state = state.copy(isLoading = true)
     }
 
     private fun getDoors() {
         getDoorsUseCase().onEach {
-            state = state.copy(doors = it)
+            state = state.copy(doors = it, isLoading = false)
         }.launchIn(viewModelScope)
     }
 
     private fun fetchError() {
         repo.errorMessage.onEach {
-            state = state.copy(errorMessage = it)
+            state = state.copy(errorMessage = it, isLoading = false)
             delay(4000L)
-            state = state.copy(errorMessage = "")
+            state = state.copy(errorMessage = "", isLoading = false)
         }.launchIn(viewModelScope)
     }
 }

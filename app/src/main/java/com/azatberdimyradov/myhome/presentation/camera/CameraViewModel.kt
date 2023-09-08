@@ -32,19 +32,20 @@ class CameraViewModel @Inject constructor(
 
     fun updateCameras() = viewModelScope.launch {
         updateCamerasUseCase()
+        state = state.copy(isLoading = false)
     }
 
     private fun getCameras() {
         getCamerasUseCase().onEach {
-            state = state.copy(cameras = it)
+            state = state.copy(cameras = it, isLoading = false)
         }.launchIn(viewModelScope)
     }
 
     private fun fetchError() {
         repo.errorMessage.onEach {
-            state = state.copy(errorMessage = it)
+            state = state.copy(errorMessage = it, isLoading = false)
             delay(4000L)
-            state = state.copy(errorMessage = "")
+            state = state.copy(errorMessage = "", isLoading = false)
         }.launchIn(viewModelScope)
     }
 }
